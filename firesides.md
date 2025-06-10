@@ -4,14 +4,17 @@ title: Fireside Chats
 permalink: /firesides/
 ---
 
-<ul>
-  {% for post in site.posts %}
-    <li>
-      <span>{{ post.date | date: "%b %-d, %Y" }}</span>
-      <a href="{{ post.url }}">{{ post.title }}</a>
-      <br>
-      {{ post.excerpt }}
-    </li>
-  {% endfor %}
-</ul>
+<!-- Debug: Show total posts count -->
+<p>Total posts: {{ site.posts.size }}</p>
 
+{% for post in site.posts %}
+  <div style="margin-bottom: 2em;">
+    <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
+    <p style="color: #666; font-size: 0.9em;">{{ post.date | date: "%B %d, %Y" }}</p>
+    {% if post.excerpt %}
+      {{ post.excerpt }}
+    {% endif %}
+  </div>
+{% empty %}
+  <p>No blog posts found.</p>
+{% endfor %}
