@@ -8,10 +8,15 @@ github_username: kaung-htet-myat
 
 # Build settings
 markdown: kramdown
-permalink: pretty
-
 highlighter: rouge
-kramdown:
-  input: GFM
-  auto_ids: true
-  syntax_highlighter: rouge
+theme: minima
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# Collections
+collections:
+  papers:
+    output: true
+    permalink: /:collection/:name/
