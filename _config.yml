@@ -13,7 +13,6 @@ plugins:
 
 # Navigation
 header_pages:
-  - index.md
   - firesides.md
 
 # Exclude from processing
