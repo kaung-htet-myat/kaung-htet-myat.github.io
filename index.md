@@ -1,11 +1,12 @@
 ---
 layout: page
-title: Kaung Htet Myat
 permalink: /
 ---
 
+# Kaung Htet Myat
 *I, a universe of atoms, an atom in the universe*
 ---
+<br>
 <br>
 
 ## I worked on and am working on:
@@ -14,6 +15,7 @@ permalink: /
 - OCR projects on multiple languages (Burmese, English, Thai, Bahasa)
 - Generative AI projects using various LLMs
 - Managing AWS infras and terraform
+<br>
 <br>
 
 ## For my personal projects:
