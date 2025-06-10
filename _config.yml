@@ -14,7 +14,7 @@ plugins:
 # Navigation
 header_pages:
   - index.md
-  - blogs.md
+  - firesides.md
   - papers.md
 
 # Exclude from processing
