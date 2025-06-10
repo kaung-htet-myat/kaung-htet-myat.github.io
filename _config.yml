@@ -1,3 +1,17 @@
+# Site settings
 theme: jekyll-theme-minimal
 title: Kaung Htet Myat
 description: AI Engineer
+baseurl: ""
+url: "https://kaung-htet-myat.github.io"
+github_username: kaung-htet-myat
+
+# Build settings
+markdown: kramdown
+permalink: pretty
+
+highlighter: rouge
+kramdown:
+  input: GFM
+  auto_ids: true
+  syntax_highlighter: rouge
