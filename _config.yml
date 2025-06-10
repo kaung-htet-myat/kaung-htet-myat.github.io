@@ -15,7 +15,6 @@ plugins:
 header_pages:
   - index.md
   - firesides.md
-  - papers.md
 
 # Exclude from processing
 exclude:
