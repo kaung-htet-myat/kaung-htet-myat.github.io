@@ -14,5 +14,4 @@ permalink: /firesides/
       {{ post.excerpt }}
     {% endif %}
   </div>
-  {% endunless %}
 {% endfor %}
