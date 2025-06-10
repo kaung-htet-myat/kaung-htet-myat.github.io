@@ -15,6 +15,4 @@ permalink: /firesides/
       {{ post.excerpt }}
     {% endif %}
   </div>
-{% empty %}
-  <p>No blog posts found.</p>
 {% endfor %}
