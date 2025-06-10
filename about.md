@@ -2,7 +2,7 @@
 theme: jekyll-theme-minimal
 layout: page
 title: "About"
-permalink: /
+permalink: /about/
 ---
 # Kaung Htet Myat
 *I, a universe of atoms, an atom in the universe*
