@@ -1,10 +1,8 @@
 ---
 layout: page
-title: Firesides
+title: Fireside Chats
 permalink: /firesides/
 ---
-
-# Fireside Chats
 
 {% for post in site.posts %}
   <div style="margin-bottom: 2em;">
