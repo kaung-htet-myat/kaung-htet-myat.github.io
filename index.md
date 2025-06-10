@@ -4,8 +4,7 @@ title: ""
 permalink: /
 ---
 
-*I, a universe of atoms, an atom in the universe*
----
+<br>
 <br>
 <br>
 
