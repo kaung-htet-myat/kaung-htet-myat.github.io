@@ -4,7 +4,6 @@ title: ""
 permalink: /
 ---
 
-# Kaung Htet Myat
 *I, a universe of atoms, an atom in the universe*
 ---
 <br>
