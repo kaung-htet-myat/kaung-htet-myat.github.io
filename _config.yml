@@ -1,9 +1,7 @@
 # Site settings
-title: 
+title: Kaung Htet Myat
 description: 
 baseurl: ""
-url: "https://kaung-htet-myat.github.io"
-github_username: kaung-htet-myat
 
 # Build settings
 markdown: kramdown
