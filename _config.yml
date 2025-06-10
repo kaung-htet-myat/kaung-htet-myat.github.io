@@ -7,9 +7,9 @@ github_username: kaung-htet-myat
 
 # Build settings
 markdown: kramdown
-remote_theme: pages-themes/minimal@v0.2.0
+theme: minima
 plugins:
-- jekyll-remote-theme
+  - jekyll-feed
 
 # Navigation
 header_pages:
