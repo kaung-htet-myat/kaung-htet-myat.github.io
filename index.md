@@ -13,6 +13,8 @@ permalink: /
 - A GenAI project leveraging Google's Gemini models
 - Managing AWS infras using terraform
 
+<br>
+
 #### At [Codigo](https://www.codigo.co), I worked on:
 - Deep learning models for Myanmar Handwritten Text Recognition System
 - Burmese language OCR systems
