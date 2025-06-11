@@ -20,7 +20,7 @@ permalink: /
 <br>
 <br>
 
-## Personal projects:
+## Personal projects
 - Telegram bot with AI agent in backend to set reminders using natural language or from uploaded photos or documents
   - [https://github.com/kaung-htet-myat/TARS](https://github.com/kaung-htet-myat/TARS)
 - Music genre classifier
@@ -30,7 +30,7 @@ permalink: /
 <br>
 <br>
 
-## Research experience:
+## Research experience
 - Active learning + knowledge distillation for divergent multi-teacher learning
   - [https://github.com/kaung-htet-myat/Multi-teachers-Knowledge-Distillation](https://github.com/kaung-htet-myat/Multi-teachers-Knowledge-Distillation)
   - [https://github.com/kaung-htet-myat/feature-distillation-tf](https://github.com/kaung-htet-myat/feature-distillation-tf)
