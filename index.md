@@ -5,17 +5,19 @@ permalink: /
 ---
 
 ## My Professional Journey
-#### At [Carro](https://carro.sg/about), I worked on and am working on:
-- Computer vision projects using object detection + segmentation + DIS
-- An audio classification project based on traditional signal processing + neural networks
-- A single-body-multi-head image classification model using multi-teachers knowledge distillation techniques
-- A multilingual OCR project (Burmese, English, Thai, Bahasa)
-- A GenAI project leveraging Google's Gemini models
-- Managing AWS infras using terraform
+- At [Carro](https://carro.sg/about), I worked on and am working on:
+  - Computer vision projects using object detection + segmentation + DIS
+  - An audio classification project based on traditional signal processing + neural networks
+  - A single-body-multi-head image classification model using multi-teachers knowledge distillation techniques
+  - A multilingual OCR project (Burmese, English, Thai, Bahasa)
+  - A GenAI project leveraging Google's Gemini models
+  - Managing AWS infras using terraform
 
-#### At [Codigo](https://www.codigo.co), I worked on:
-- Deep learning models for Myanmar Handwritten Text Recognition System
-- Burmese language OCR systems
+<br>
+
+- At [Codigo](https://www.codigo.co), I worked on:
+  - Deep learning models for Myanmar Handwritten Text Recognition System
+  - Burmese language OCR systems
 
 <br>
 <br>
