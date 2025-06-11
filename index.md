@@ -4,6 +4,12 @@ title: ""
 permalink: /
 ---
 
+## About Me
+*I, a universe of atoms, an atom in the universe*
+
+<br>
+<br>
+
 ## My Professional Journey
 - At [Carro](https://carro.sg/about), I worked on and am working on:
   - Computer vision projects using object detection + segmentation + DIS
@@ -13,8 +19,6 @@ permalink: /
   - A GenAI project leveraging Google's Gemini models
   - Managing AWS infras using terraform
 
-<br>
-
 - At [Codigo](https://www.codigo.co), I worked on:
   - Deep learning models for Myanmar Handwritten Text Recognition System
   - Burmese language OCR systems
@@ -22,7 +26,7 @@ permalink: /
 <br>
 <br>
 
-## Personal projects
+## Personal Projects
 - Telegram bot with AI agent in backend to set reminders using natural language or from uploaded photos or documents
   - [https://github.com/kaung-htet-myat/TARS](https://github.com/kaung-htet-myat/TARS)
 - Music genre classifier
@@ -32,7 +36,16 @@ permalink: /
 <br>
 <br>
 
-## Research experience
+## Research Experience
 - Active learning + knowledge distillation for divergent multi-teacher learning
   - [https://github.com/kaung-htet-myat/Multi-teachers-Knowledge-Distillation](https://github.com/kaung-htet-myat/Multi-teachers-Knowledge-Distillation)
   - [https://github.com/kaung-htet-myat/feature-distillation-tf](https://github.com/kaung-htet-myat/feature-distillation-tf)
+
+<br>
+<br>
+
+## Get To Know Me
+- [kaunghm.09@gmail.com](kaunghm.09@gmail.com)
+- [github](https://github.com/kaung-htet-myat)
+- [linkedin](www.linkedin.com/in/kaung-htet-myat-a714871b3)
+- [facebook](https://www.facebook.com/kaunghtet.myat.5)
