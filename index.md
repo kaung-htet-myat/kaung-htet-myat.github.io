@@ -44,5 +44,6 @@ permalink: /
 ### Get To Know Me
 - [kaunghm.09@gmail.com](kaunghm.09@gmail.com)
 - [github](https://github.com/kaung-htet-myat)
-- [linkedin](www.linkedin.com/in/kaung-htet-myat-a714871b3)
+- [linkedin](https://www.linkedin.com/in/kaung-htet-myat-a714871b3)
 - [facebook](https://www.facebook.com/kaunghtet.myat.5)
+- [instagram](https://www.instagram.com/kaung_hm)
