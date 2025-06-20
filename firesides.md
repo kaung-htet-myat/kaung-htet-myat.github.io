@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Firesides
+title: ""
 permalink: /firesides/
 ---
 
