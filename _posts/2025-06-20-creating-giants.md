@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Be Undisciplined"
-excerpt: "It seems to me that there is some chance that you may be successful since you say you have not studied physics in a disciplined fashion. So much the better, but study hard what interests you the most in the most undisciplined, irreverent and original manner possible."
+excerpt: "Be undisciplined when you learn something new. That’s what I have to remind myself from time to time. When I try to learn something new, I tend to treat it like a study routine. I will lay out..."
 date: 2024-06-20
 ---
 
