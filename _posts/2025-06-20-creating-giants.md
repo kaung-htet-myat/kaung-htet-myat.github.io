@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Be Undisciplined"
+excerpt: "It seems to me that there is some chance that you may be successful since you say you have not studied physics in a disciplined fashion. So much the better, but study hard what interests you the most in the most undisciplined, irreverent and original manner possible."
 date: 2024-06-20
 ---
 
