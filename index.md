@@ -5,7 +5,7 @@ permalink: /
 ---
 
 ### About Me
-*I, a universe of atoms, an atom in the universe*
+I am a machine learning engineer who enjoys listening to metal songs while coding.
 
 <br>
 
