@@ -6,7 +6,7 @@ date: 2025-08-31
 ---
 
 When we talk about today's generative modelling landscape, the two main talk of the town use cases that people are interested in the most are language modelling and image generation. The most influential model architecture that enables language modelling today is, as we all know, the transformers or varients of transformers. On the otherhand, in image generation field, prominent models like stable diffusion, OpenAI's GLIDE models or Dall-E 2 are made possible by diffusion models. Among various architectures and methods used in image generation like GAN, VAE or flow-based methods, diffusion models are still dominant to this day and is one of the most interesting models for me. Methodologies used in making the diffusion model work are very interesting and I will try to entertain you too in this article.
-
+<br>
 
 ## Before diffusion
 
@@ -25,7 +25,7 @@ In VAE, the latent representation is a probability distribution instead of an ex
     <img src="/assets/diffusion_illustrated/AE.png" width="100%" alt>
     <p style="font-style: italic; color: #666; margin-top: 0.5em; font-size: 12">Autoencoder</p>
 </div>
-
+<br>
 
 ## Score function: the heart of diffusion
 
@@ -63,6 +63,7 @@ So, now you have the question of how does we feed timestep t to the U-net? We do
     <img src="/assets/diffusion_illustrated/unet.png" width="100%" alt>
     <p style="font-style: italic; color: #666; margin-top: 0.5em; font-size: 12">Diffusion Unet Architecture</p>
 </div>
+<br>
 
 ## Denoising at inference time
 
@@ -71,6 +72,7 @@ Now that we have trained our diffusion model to predict the noise intensity at a
 **xₜ₋₁ = (1 / √αₜ) * (xₜ - ((1-αₜ) / √(1 - ᾱₜ)) * εt) + σₜ * z**
 
 In the above formula, you might have noticed we have a new parameter z. That is a stochastic gaussian noise added after each denoising step to avoid stucking at a random direction along the way. Without that stochastic noise, if the model goes down the bad path and get stuck, it won't be able to get out of that nonoptimal direction.
+<br>
 
 ## What does guidance do?
 
@@ -92,6 +94,7 @@ And we scale the guidance term in the formula with γ, which you might have alre
 **∇xlogp(x\|y) = ∇xlogp(x) + γ∇xlogp(y\|x)**
 
 In reality, using a classifier as the guidance for the diffusion model is a bit cumbersome because we cannot just use a pretrained classifier because the classifiers trained on normal clean images are not noise-aware. So, in order to use classifier-guided diffusion, we have to train a classifier to be noise aware. And by using a completely separate classifier, computation is not cheap either. Here where classifier-free guidance comes into the scene.
+<br>
 
 ## Classifier-free guidance
 
@@ -110,6 +113,7 @@ By substituting the ∇xlogp(y\|x) back into the formula in previous section, we
 By doing so, we don't need a separate classifier, we can use one model both as a classifier and the noise predictor. At training time, we train the model with noisy image + text embedding by using cross-attention between intermediate u-net features and text embedding. Model is trained with conditioning dropout which drops text embedding and train only the u-net about 10-20% of the time during training. In this fashion, one model is trained both for conditioned and unconditioned scenerios. 🤯🤯
 
 At inference time, model makes prediction twice, once with user prompt as text embedding for ∇xlogp(x\|y) and once with null text embedding for unconditioned ∇xlogp(x). By using the formula above, we can get the final noise prediction and substract that noise from input noisy image xt to get xt-1.
+<br>
 
 ## Conclusion
-Among all the variety of use cases of AI, image generation is one of the most popular area people are excited about. With that said, the tricks and twists that make diffusion models work well are equally interesting, mathematically profound and brilliant. As the research in diffusion models for other use cases like language modelling is also gaining traction, I hope we can see more clever tricks and many more interesting use cases using diffusion.
+Among all the variety of use cases of AI, image generation is one of the most popular area people are excited about. With that said, the tricks and twists that make diffusion models work well are equally interesting, mathematically profound and brilliant. As the research in diffusion models for other use cases like language modelling is also gaining traction, we can hope to see more clever tricks and many more interesting use cases of diffusion.
