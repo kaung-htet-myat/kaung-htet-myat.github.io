@@ -82,14 +82,14 @@ Let us assume that x is the noisy input image and y is the label or the text pro
 
 which means that to predict the noise intensity of x, guided by y, we need a classifier p(y\|x). When we take log of the Bayes' rule, 
 
-**logp(x\∣y) = logp(y\∣x) + logp(x) − logp(y)**
-**∇xlogp(x\∣y) = ∇xlogp(y\∣x) + ∇xlogp(x)**
+**logp(x\|y) = logp(y\|x) + logp(x) − logp(y)**
+**∇xlogp(x\|y) = ∇xlogp(y\|x) + ∇xlogp(x)**
 
 which means that to predict the y-guided noise of x, we have to use the gradient of the classifier p(y\|x) and the score function p(x). We can ignore p(y) here because when we only care for the gradient w.r.t x, p(y) becomes constant.
 
 And we scale the guidance term in the formula with γ, which you might have already known as the guidance_scale parameter if you are familiar with huggingface's diffusers library. The formula becomes
 
-**∇xlogp(x\∣y) = ∇xlogp(x) + γ∇xlogp(y\∣x)**
+**∇xlogp(x\|y) = ∇xlogp(x) + γ∇xlogp(y\|x)**
 
 In reality, using a classifier as the guidance for the diffusion model is a bit cumbersome because we cannot just use a pretrained classifier because the classifiers trained on normal clean images are not noise-aware. So, in order to use classifier-guided diffusion, we have to train a classifier to be noise aware. And by using a completely separate classifier, computation is not cheap either. Here where classifier-free guidance comes into the scene.
 
@@ -101,15 +101,15 @@ In classifier-guided diffusion models, we need a separate classifier p(y\|x) whi
 
 If we inference it as in previous section, we get
 
-**∇xlogp(y\∣x) = ∇xlogp(x\∣y) − ∇xlogp(x)**
+**∇xlogp(y\|x) = ∇xlogp(x\|y) − ∇xlogp(x)**
 
-By substituting the ∇xlogp(y∣x) back into the formula in previous section, we get
+By substituting the ∇xlogp(y\|x) back into the formula in previous section, we get
 
-**∇xlogp(x\∣y) = ∇xlogp(x) + γ(∇xlogp(x\∣y) − ∇xlogp(x))**
+**∇xlogp(x\|y) = ∇xlogp(x) + γ(∇xlogp(x\|y) − ∇xlogp(x))**
 
 By doing so, we don't need a separate classifier, we can use one model both as a classifier and the noise predictor. At training time, we train the model with noisy image + text embedding by using cross-attention between intermediate u-net features and text embedding. Model is trained with conditioning dropout which drops text embedding and train only the u-net about 10-20% of the time during training. In this fashion, one model is trained both for conditioned and unconditioned scenerios. 🤯🤯
 
-At inference time, model makes prediction twice, once with user prompt as text embedding for ∇xlogp(x∣y) and once with null text embedding for unconditioned ∇xlogp(x). By using the formula above, we can get the final noise prediction and substract that noise from input noisy image xt to get xt-1.
+At inference time, model makes prediction twice, once with user prompt as text embedding for ∇xlogp(x\|y) and once with null text embedding for unconditioned ∇xlogp(x). By using the formula above, we can get the final noise prediction and substract that noise from input noisy image xt to get xt-1.
 
 ## Conclusion
 Among all the variety of use cases of AI, image generation is one of the most popular area people are excited about. With that said, the tricks and twists that make diffusion models work well are equally interesting, mathematically profound and brilliant. As the research in diffusion models for other use cases like language modelling is also gaining traction, I hope we can see more clever tricks and many more interesting use cases using diffusion.
