@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Intuition of Diffusion Models"
+title: "Intuition for Diffusion Models"
 excerpt: "When we talk about today's generative modelling landscape, the two main talk of the town use cases that people are interested in the most are language modelling and image generation. The most influential model architecture..."
 date: 2025-08-31
 ---
