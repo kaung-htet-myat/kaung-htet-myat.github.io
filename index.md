@@ -16,11 +16,10 @@ I am a machine learning engineer who enjoys listening to metal songs while codin
   - An audio classification project based on traditional signal processing + neural networks to identify engine issues from engine audio recordings
   - A single-body-multi-head image classification model using multi-teachers knowledge distillation techniques to identify basic car infos
   - A multilingual OCR project (English, Thai and Bahasa) for eKYC system
-  - A GenAI project leveraging Google's Gemini models
   - Managing AWS infras using terraform
 
 - At [Codigo](https://www.codigo.co), I worked on:
-  - Deep learning models for Myanmar Handwritten Text Recognition System
+  - Deep learning models for Burmese Handwritten Text Recognition System
   - Burmese language OCR systems
 
 <br>
