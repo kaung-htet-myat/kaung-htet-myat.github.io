@@ -114,4 +114,9 @@ At inference time, model makes prediction twice, once with user prompt as text e
 <br><br><br>
 
 ## Conclusion
-Among all the variety of use cases of AI, image generation is one of the most popular area people are excited about. With that said, the tricks and twists that make diffusion models work well are equally interesting, mathematically profound and brilliant. As the research in diffusion models for other use cases like language modelling is also gaining traction, we can hope to see more clever tricks and many more interesting use cases of diffusion.
+Among all the variety of use cases of AI, image generation is one of the most popular area people are excited about. With that said, the tricks and twists that make diffusion models work well are equally interesting, mathematically profound and brilliant. As the research in diffusion models for other use cases like language modelling is also gaining traction, we can hope to see more clever tricks and many more interesting use cases of diffusion.<br>
+If you are interested in diffusion models and get to dig deeper, here are great reads which helped me get the intuition:
+- [What are Diffusion Models?](https://lilianweng.github.io/posts/2021-07-11-diffusion-models/)
+- [Diffusion models are autoencoders](https://sander.ai/2022/01/31/diffusion.html)
+- [Guidance: a cheat code for diffusion models](https://sander.ai/2022/05/26/guidance.html)
+- [The geometry of diffusion guidance](https://sander.ai/2023/08/28/geometry.html)
