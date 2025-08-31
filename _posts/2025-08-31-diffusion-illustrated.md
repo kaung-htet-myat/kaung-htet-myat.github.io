@@ -80,12 +80,12 @@ Let us assume that x is the noisy input image and y is the label or the text pro
 
 **p(x\|y) = (p(y\|x) * p(x)) / p(y)**
 
-which means that to predict the noise intensity of x, guided by y, we need a classifier p(y|x). When we take log of the Bayes' rule, 
+which means that to predict the noise intensity of x, guided by y, we need a classifier p(y\|x). When we take log of the Bayes' rule, 
 
 **logp(x\∣y) = logp(y\∣x) + logp(x) − logp(y)**
 **∇xlogp(x\∣y) = ∇xlogp(y\∣x) + ∇xlogp(x)**
 
-which means that to predict the y-guided noise of x, we have to use the gradient of the classifier p(y|x) and the score function p(x). We can ignore p(y) here because when we only care for the gradient w.r.t x, p(y) becomes constant.
+which means that to predict the y-guided noise of x, we have to use the gradient of the classifier p(y\|x) and the score function p(x). We can ignore p(y) here because when we only care for the gradient w.r.t x, p(y) becomes constant.
 
 And we scale the guidance term in the formula with γ, which you might have already known as the guidance_scale parameter if you are familiar with huggingface's diffusers library. The formula becomes
 
@@ -95,7 +95,7 @@ In reality, using a classifier as the guidance for the diffusion model is a bit 
 
 ## Classifier-free guidance
 
-In classifier-guided diffusion models, we need a separate classifier p(y|x) which is inefficient and cumbersome. So, when we look at Bayes' rule, we can see that:
+In classifier-guided diffusion models, we need a separate classifier p(y\|x) which is inefficient and cumbersome. So, when we look at Bayes' rule, we can see that:
 
 **p(y\|x) = (p(x\|y) * p(y)) / p(x)**
 
