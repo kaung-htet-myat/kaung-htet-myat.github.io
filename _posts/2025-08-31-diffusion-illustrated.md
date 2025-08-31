@@ -6,7 +6,7 @@ date: 2025-08-31
 ---
 
 When we talk about today's generative modelling landscape, the two main talk of the town use cases that people are interested in the most are language modelling and image generation. The most influential model architecture that enables language modelling today is, as we all know, the transformers or varients of transformers. On the otherhand, in image generation field, prominent models like stable diffusion, OpenAI's GLIDE models or Dall-E 2 are made possible by diffusion models. Among various architectures and methods used in image generation like GAN, VAE or flow-based methods, diffusion models are still dominant to this day and is one of the most interesting models for me. Methodologies used in making the diffusion model work are very interesting and I will try to entertain you too in this article.
-<br>
+<br><br>
 
 ## Before diffusion
 
@@ -17,26 +17,23 @@ Before diffusion models come around, we had GAN and Autoencoder models. Let's ta
     <p style="font-style: italic; color: #666; margin-top: 0.5em; font-size: 12">GAN</p>
 </div>
 
-Autoencoder architecture also includes two models but they are not racing against each other; they are cooperating to create the information bottleneck to compress the input data into a lower dimensional latent representation. Encoder compresses the input data into a bottleneck latent representation and Decoder tries to reconstruct the input data from the latent. Two models end-to-end try to optimize the reconstruction loss which pushes the model to generate output as similar as possible to the input data. There are many other variations of autoencoders also, namely denoising autoencoders, VAE, beta-VAE, VQ-VAE, etc.
-
+Autoencoder architecture also includes two models but they are not racing against each other; they are cooperating to create the information bottleneck to compress the input data into a lower dimensional latent representation. Encoder compresses the input data into a bottleneck latent representation and Decoder tries to reconstruct the input data from the latent. Two models end-to-end try to optimize the reconstruction loss which pushes the model to generate output as similar as possible to the input data. There are many other variations of autoencoders also, namely denoising autoencoders, VAE, beta-VAE, VQ-VAE, etc.<br>
 In VAE, the latent representation is a probability distribution instead of an exact latent variable. By making the latent representation a probability distribution, the space becomes continuous and thus enchancing the interpolation nature when generating the image. There are very interesting mechanisms enabling the VAE work, for example, minimizing the KL divergence between latent distribution and a Gaussian distribution to make the latent space to be regularized in accordance with a simple prior distribution so that similar features will overlap and different features will be separated more. I will not talk too much about VAE here as we have to dig deeper into diffusion models. If you are interested in autoencoder architectures, Lilian Weng's [From Autoencoder to Beta-VAE](https://lilianweng.github.io/posts/2018-08-12-vae/) is very informational. 
 
 <div style="text-align: center; margin: 2em 0;">
     <img src="/assets/diffusion_illustrated/AE.png" width="100%" alt>
     <p style="font-style: italic; color: #666; margin-top: 0.5em; font-size: 12">Autoencoder</p>
 </div>
-<br>
+<br><br>
 
 ## Score function: the heart of diffusion
 
-When we train diffusion models, what the diffusion model is trying to do is to estimate the score function ∇xlogp(x). Here, what ∇xlogp(x) means is model is trying to find the gradient w.r.t input x. In case of a typical neural network, we try to optimize the network using the gradient w.r.t θ, but in diffusion we will optimize the gradient of the input itself. In other words, we are trying to modify the input image to be more similar to a target image. In this case, input is a noisy and corrupted image and the target will be the clean and uncorrupted image. Or, in most of the cases, input is a noisy image and the model will predict the amount of noise added to the clean image.
-
+When we train diffusion models, what the diffusion model is trying to do is to estimate the score function ∇xlogp(x). Here, what ∇xlogp(x) means is model is trying to find the gradient w.r.t input x. In case of a typical neural network, we try to optimize the network using the gradient w.r.t θ, but in diffusion we will optimize the gradient of the input itself. In other words, we are trying to modify the input image to be more similar to a target image. In this case, input is a noisy and corrupted image and the target will be the clean and uncorrupted image. Or, in most of the cases, input is a noisy image and the model will predict the amount of noise added to the clean image.<br>
 So, how do we corrupt the input image? We gradually corrupt the input image by adding additive Gaussian noises step by step. Let's assume input image is x0 and we corrupt it T times, the final image is xT. The Gaussian nosie we add at timestep t is εt and we control the noising procedure with a variance schedule, βt. In this case, the noising formula at timestep t will be:
 
 **xₜ = √(1 - βₜ) * xₜ₋₁ + √βₜ * εₜ₋₁**
 
-What is the purpose of βt here? βt is a linear schedule gradually increase as timestep t goes. For example, β0 starts from 0.0001 to βt ending with 0.02. What it does is it gradually increases the intensity of the noise. In above formula, we can see that we scale the xt-1 with (1-βt) and scale the noise εt-1 with βt. The reason we do so is to prevent the xt from exploding by reducing the intensity of the xt-1 before adding more noises, which is εt-1.
-
+What is the purpose of βt here? βt is a linear schedule gradually increase as timestep t goes. For example, β0 starts from 0.0001 to βt ending with 0.02. What it does is it gradually increases the intensity of the noise. In above formula, we can see that we scale the xt-1 with (1-βt) and scale the noise εt-1 with βt. The reason we do so is to prevent the xt from exploding by reducing the intensity of the xt-1 before adding more noises, which is εt-1.<br>
 Adding noises step by step in this manner is slow so we can apply a clever mathematical trick to add the noises directly to the x0 with the formula:
 
 **xₜ = √ᾱₜ * x₀ + √(1 - ᾱₜ) * ε**<br>
@@ -63,7 +60,7 @@ So, now you have the question of how does we feed timestep t to the U-net? We do
     <img src="/assets/diffusion_illustrated/unet.png" width="100%" alt>
     <p style="font-style: italic; color: #666; margin-top: 0.5em; font-size: 12">Diffusion Unet Architecture</p>
 </div>
-<br>
+<br><br>
 
 ## Denoising at inference time
 
@@ -72,7 +69,7 @@ Now that we have trained our diffusion model to predict the noise intensity at a
 **xₜ₋₁ = (1 / √αₜ) * (xₜ - ((1-αₜ) / √(1 - ᾱₜ)) * εt) + σₜ * z**
 
 In the above formula, you might have noticed we have a new parameter z. That is a stochastic gaussian noise added after each denoising step to avoid stucking at a random direction along the way. Without that stochastic noise, if the model goes down the bad path and get stuck, it won't be able to get out of that nonoptimal direction.
-<br>
+<br><br>
 
 ## What does guidance do?
 
@@ -87,14 +84,13 @@ which means that to predict the noise intensity of x, guided by y, we need a cla
 **logp(x\|y) = logp(y\|x) + logp(x) − logp(y)**
 **∇xlogp(x\|y) = ∇xlogp(y\|x) + ∇xlogp(x)**
 
-which means that to predict the y-guided noise of x, we have to use the gradient of the classifier p(y\|x) and the score function p(x). We can ignore p(y) here because when we only care for the gradient w.r.t x, p(y) becomes constant.
-
+which means that to predict the y-guided noise of x, we have to use the gradient of the classifier p(y\|x) and the score function p(x). We can ignore p(y) here because when we only care for the gradient w.r.t x, p(y) becomes constant.<br>
 And we scale the guidance term in the formula with γ, which you might have already known as the guidance_scale parameter if you are familiar with huggingface's diffusers library. The formula becomes
 
 **∇xlogp(x\|y) = ∇xlogp(x) + γ∇xlogp(y\|x)**
 
 In reality, using a classifier as the guidance for the diffusion model is a bit cumbersome because we cannot just use a pretrained classifier because the classifiers trained on normal clean images are not noise-aware. So, in order to use classifier-guided diffusion, we have to train a classifier to be noise aware. And by using a completely separate classifier, computation is not cheap either. Here where classifier-free guidance comes into the scene.
-<br>
+<br><br>
 
 ## Classifier-free guidance
 
@@ -110,10 +106,9 @@ By substituting the ∇xlogp(y\|x) back into the formula in previous section, we
 
 **∇xlogp(x\|y) = ∇xlogp(x) + γ(∇xlogp(x\|y) − ∇xlogp(x))**
 
-By doing so, we don't need a separate classifier, we can use one model both as a classifier and the noise predictor. At training time, we train the model with noisy image + text embedding by using cross-attention between intermediate u-net features and text embedding. Model is trained with conditioning dropout which drops text embedding and train only the u-net about 10-20% of the time during training. In this fashion, one model is trained both for conditioned and unconditioned scenerios. 🤯🤯
-
+By doing so, we don't need a separate classifier, we can use one model both as a classifier and the noise predictor. At training time, we train the model with noisy image + text embedding by using cross-attention between intermediate u-net features and text embedding. Model is trained with conditioning dropout which drops text embedding and train only the u-net about 10-20% of the time during training. In this fashion, one model is trained both for conditioned and unconditioned scenerios. 🤯🤯<br>
 At inference time, model makes prediction twice, once with user prompt as text embedding for ∇xlogp(x\|y) and once with null text embedding for unconditioned ∇xlogp(x). By using the formula above, we can get the final noise prediction and substract that noise from input noisy image xt to get xt-1.
-<br>
+<br><br>
 
 ## Conclusion
 Among all the variety of use cases of AI, image generation is one of the most popular area people are excited about. With that said, the tricks and twists that make diffusion models work well are equally interesting, mathematically profound and brilliant. As the research in diffusion models for other use cases like language modelling is also gaining traction, we can hope to see more clever tricks and many more interesting use cases of diffusion.
