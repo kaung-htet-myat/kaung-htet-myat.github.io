@@ -31,7 +31,7 @@ In VAE, the latent representation is a probability distribution instead of an ex
 When we train diffusion models, what the diffusion model is trying to do is to estimate the score function $$\nabla_xlogp(x)$$. Here, what $$\nabla_xlogp(x)$$ means is model is trying to find the gradient w.r.t input x. In case of a typical neural network, we try to optimize the network using the gradient w.r.t θ, but in diffusion we will optimize the gradient of the input itself. In other words, we are trying to modify the input image to be more similar to a target image. In this case, input is a noisy and corrupted image and the target will be the clean and uncorrupted image. Or, in most of the cases, input is a noisy image and the model will predict the intensity of noise added to the clean image.<br>
 So, how do we corrupt the input image? We gradually corrupt the input image by adding additive Gaussian noises step by step. Let's assume input image is $$x_0$$ and we corrupt it T times, the final image is $$x_T$$. The Gaussian nosie we add at timestep t is εt and we control the noising procedure with a variance schedule, $$\beta_t$$. In this case, the noising formula at timestep t will be:
 
-**$$x_t = \sqrt{(1 - \beta_t)} . x_{t-1} + \sqrt{\beta_t} . \epsilon_{t-1}$$**
+**\(x_t = \sqrt{(1 - \beta_t)} . x_{t-1} + \sqrt{\beta_t} . \epsilon_{t-1}\)**
 
 What is the purpose of $$\beta_t$$ here? $$\beta_t$$ is a linear schedule and it gradually increases as timestep t goes. For example, $$\beta_0$$ starts from 0.0001 to $$\beta_t$$ ending with 0.02. What it does is it gradually increases the intensity of the noise. In above formula, we can see that we scale the $$x_{t-1}$$ with (1-$$\beta_t$$) and scale the noise $$\epsilon_{t-1}$$ with $$\beta_t$$. The reason we do so is to prevent the $$x_t$$ from exploding by reducing the intensity of the $$x_{t-1}$$ before adding more noises $$\epsilon_{t-1}$$.<br>
 Adding noises step by step in this manner is slow so we can apply a clever mathematical trick to add the noises directly to the $$x_0$$ with the formula:
@@ -80,17 +80,17 @@ When we use diffusion models to generate images by giving prompts to the model, 
 
 Let us assume that x is the noisy input image and y is the label or the text prompt, by using Bayes' rule,
 
-**$$p(x|y) = \frac{p(y|x) . p(x)}{p(y)}$$**
+**$$p(x\|y) = \frac{p(y\|x) . p(x)}{p(y)}$$**
 
 which means that to predict the noise intensity of x, guided by y, we need a classifier p(y\|x). When we take log of the Bayes' rule, 
 
-**$$logp(x|y) = logp(y|x) + logp(x) − logp(y)$$**<br>
-**$$\nabla_xlogp(x|y) = \nabla_xlogp(y|x) + \nabla_xlogp(x)$$**<br>
+**$$logp(x\|y) = logp(y\|x) + logp(x) − logp(y)$$**<br>
+**$$\nabla_xlogp(x\|y) = \nabla_xlogp(y\|x) + \nabla_xlogp(x)$$**<br>
 
 which means that to predict the y-guided noise of x, we have to use the gradient of the classifier p(y\|x) and the score function p(x). We can ignore p(y) here because when we only care for the gradient w.r.t x, p(y) becomes constant.<br>
 And we scale the guidance term in the formula with γ, which you might have already known as the guidance_scale parameter if you are familiar with huggingface's diffusers library. The formula becomes
 
-**$$\nabla_xlogp(x|y) = \nabla_xlogp(x) + \gamma.\nabla_xlogp(y|x)$$**
+**$$\nabla_xlogp(x\|y) = \nabla_xlogp(x) + \gamma.\nabla_xlogp(y\|x)$$**
 
 In reality, using a classifier as the guidance for the diffusion model is a bit cumbersome because we cannot just use a pretrained classifier because the classifiers trained on normal clean images are not noise-aware. So, in order to use classifier-guided diffusion, we have to train a classifier to be noise aware. And by using a completely separate classifier, computation is not cheap either. Here where classifier-free guidance comes into the scene.
 <br><br><br>
@@ -99,18 +99,18 @@ In reality, using a classifier as the guidance for the diffusion model is a bit 
 
 In classifier-guided diffusion models, we need a separate classifier p(y\|x) which is inefficient and cumbersome. When we take a look at Bayes' rule, we can see that:
 
-**$$p(y|x) = \frac{p(x|y) . p(y)}{p(x)}$$**
+**$$p(y\|x) = \frac{p(x\|y) . p(y)}{p(x)}$$**
 
 If we inference it as in previous section, we get
 
-**$$\nabla_xlogp(y|x) = \nabla_xlogp(x|y) − \nabla_xlogp(x)$$**
+**$$\nabla_xlogp(y\|x) = \nabla_xlogp(x\|y) − \nabla_xlogp(x)$$**
 
-By substituting the $$\nabla_xlogp(y|x)$$ back in to the guided score function p(x\|y) formula, we get
+By substituting the $$\nabla_xlogp(y\|x)$$ back in to the guided score function p(x\|y) formula, we get
 
-**$$\nabla_xlogp(x|y) = \nabla_xlogp(x) + \gamma.(\nabla_xlogp(x|y) − \nabla_xlogp(x))$$**
+**$$\nabla_xlogp(x\|y) = \nabla_xlogp(x) + \gamma.(\nabla_xlogp(x\|y) − \nabla_xlogp(x))$$**
 
 By doing so, we no longer need a separate classifier p(y\|x), we can use one model both as a classifier and the noise predictor. At training time, we train the model with noisy image + text embedding by using cross-attention between intermediate u-net features and the text embedding. Model is trained with conditioning dropout which drops text embedding at about 10-20% of the time during training. In this fashion, one model is trained both for conditioned and unconditioned scenerios. 🤯🤯<br>
-At inference time, model makes prediction twice, once with user prompt as text embedding for $$\nabla_xlogp(x|y)$$ and once with null text embedding for unconditioned $$\nabla_xlogp(x)$$. By using the formula above, we can get the final noise prediction and substract that noise from input noisy image $$x_t$$ to get $$x_{t-1}$$.
+At inference time, model makes prediction twice, once with user prompt as text embedding for $$\nabla_xlogp(x\|y)$$ and once with null text embedding for unconditioned $$\nabla_xlogp(x)$$. By using the formula above, we can get the final noise prediction and substract that noise from input noisy image $$x_t$$ to get $$x_{t-1}$$.
 <br><br><br>
 
 ## Conclusion
