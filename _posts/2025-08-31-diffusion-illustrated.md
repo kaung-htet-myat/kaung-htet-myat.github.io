@@ -28,19 +28,19 @@ In VAE, the latent representation is a probability distribution instead of an ex
 
 ## Score function: the heart of diffusion
 
-When we train diffusion models, what the diffusion model is trying to do is to estimate the score function $\nabla_xlogp(x)$. Here, what $\nabla_xlogp(x)$ means is model is trying to find the gradient w.r.t input x. In case of a typical neural network, we try to optimize the network using the gradient w.r.t θ, but in diffusion we will optimize the gradient of the input itself. In other words, we are trying to modify the input image to be more similar to a target image. In this case, input is a noisy and corrupted image and the target will be the clean and uncorrupted image. Or, in most of the cases, input is a noisy image and the model will predict the intensity of noise added to the clean image.<br>
-So, how do we corrupt the input image? We gradually corrupt the input image by adding additive Gaussian noises step by step. Let's assume input image is $x_0$ and we corrupt it T times, the final image is $x_T$. The Gaussian nosie we add at timestep t is εt and we control the noising procedure with a variance schedule, $\beta_t$. In this case, the noising formula at timestep t will be:
+When we train diffusion models, what the diffusion model is trying to do is to estimate the score function $$\nabla_xlogp(x)$$. Here, what $$\nabla_xlogp(x)$$ means is model is trying to find the gradient w.r.t input x. In case of a typical neural network, we try to optimize the network using the gradient w.r.t θ, but in diffusion we will optimize the gradient of the input itself. In other words, we are trying to modify the input image to be more similar to a target image. In this case, input is a noisy and corrupted image and the target will be the clean and uncorrupted image. Or, in most of the cases, input is a noisy image and the model will predict the intensity of noise added to the clean image.<br>
+So, how do we corrupt the input image? We gradually corrupt the input image by adding additive Gaussian noises step by step. Let's assume input image is $$x_0$$ and we corrupt it T times, the final image is $$x_T$$. The Gaussian nosie we add at timestep t is εt and we control the noising procedure with a variance schedule, $$\beta_t$$. In this case, the noising formula at timestep t will be:
 
-**$x_t = \sqrt{(1 - \beta_t)} . x_{t-1} + \sqrt{\beta_t} . \epsilon_{t-1}$**
+**$$x_t = \sqrt{(1 - \beta_t)} . x_{t-1} + \sqrt{\beta_t} . \epsilon_{t-1}$$**
 
-What is the purpose of $\beta_t$ here? $\beta_t$ is a linear schedule and it gradually increases as timestep t goes. For example, $\beta_0$ starts from 0.0001 to $\beta_t$ ending with 0.02. What it does is it gradually increases the intensity of the noise. In above formula, we can see that we scale the $x_{t-1}$ with (1-$\beta_t$) and scale the noise $\epsilon_{t-1}$ with $\beta_t$. The reason we do so is to prevent the $x_t$ from exploding by reducing the intensity of the $x_{t-1}$ before adding more noises $\epsilon_{t-1}$.<br>
-Adding noises step by step in this manner is slow so we can apply a clever mathematical trick to add the noises directly to the $x_0$ with the formula:
+What is the purpose of $$\beta_t$$ here? $$\beta_t$$ is a linear schedule and it gradually increases as timestep t goes. For example, $$\beta_0$$ starts from 0.0001 to $$\beta_t$$ ending with 0.02. What it does is it gradually increases the intensity of the noise. In above formula, we can see that we scale the $$x_{t-1}$$ with (1-$$\beta_t$$) and scale the noise $$\epsilon_{t-1}$$ with $$\beta_t$$. The reason we do so is to prevent the $$x_t$$ from exploding by reducing the intensity of the $$x_{t-1}$$ before adding more noises $$\epsilon_{t-1}$$.<br>
+Adding noises step by step in this manner is slow so we can apply a clever mathematical trick to add the noises directly to the $$x_0$$ with the formula:
 
-**$x_t = \sqrt{\bar{\alpha}_t} . x_{\theta} + \sqrt{(1 - \bar{\alpha}_t)} . \epsilon$**<br>
-**$\alpha_t = 1 - \beta_t$**<br>
-**$\bar{\alpha}_t = \alpha_1 . \alpha_2 . ... . \alpha_t$**<br>
+**$$x_t = \sqrt{\bar{\alpha}_t} . x_{\theta} + \sqrt{(1 - \bar{\alpha}_t)} . \epsilon$$**<br>
+**$$\alpha_t = 1 - \beta_t$$**<br>
+**$$\bar{\alpha}_t = \alpha_1 . \alpha_2 . ... . \alpha_t$$**<br>
 
-By doing so we can add the gaussian noise $\epsilon$ to the $x_0$ and get the $x_t$ directly in one single step by sampling the variance $\bar{\alpha}_t$ at timestep t. 🤯
+By doing so we can add the gaussian noise $$\epsilon$$ to the $$x_0$$ and get the $$x_t$$ directly in one single step by sampling the variance $$\bar{\alpha}_t$$ at timestep t. 🤯
 <br>
 <div style="text-align: center; margin: 2em 0;">
     <img src="/assets/diffusion_illustrated/noising.png" width="100%" alt>
@@ -51,13 +51,13 @@ By doing so we can add the gaussian noise $\epsilon$ to the $x_0$ and get the $x
 ## Model Architecture
 
 The model we use in diffusion is a simple U-net architecture which takes in a corrupted image as input and predicts the noise added. Then we can recover the clean image by subtracting the predicted noise from the corrupted image. How we do step-by-step at training time is:
-1. Sample an image $x_0$ from the dataset X
+1. Sample an image $$x_0$$ from the dataset X
 2. Sample the timestep t from 0<t<T
-3. Generate $x_t$ by using gaussian noise $\epsilon$ and timestep t
-4. Feed $x_t$ to U-net along with timestep t (How to feed timestep t to U-net? I will explain below)
-5. U-net predict noise at timestep t, $\epsilon_t$
+3. Generate $$x_t$$ by using gaussian noise $$\epsilon$$ and timestep t
+4. Feed $$x_t$$ to U-net along with timestep t (How to feed timestep t to U-net? I will explain below)
+5. U-net predict noise at timestep t, $$\epsilon_t$$
 
-So, now you have the question of how does we feed timestep t to the U-net? We do it by generating sinusoidal timestep embedding vector from t and concatenate it to each of the feature vector of U-net. That way, model can make sense of the amount of noise added at timestep t by looking at $x_t$ and sinusoidal embedding of t.
+So, now you have the question of how does we feed timestep t to the U-net? We do it by generating sinusoidal timestep embedding vector from t and concatenate it to each of the feature vector of U-net. That way, model can make sense of the amount of noise added at timestep t by looking at $$x_t$$ and sinusoidal embedding of t.
 <br>
 <div style="text-align: center; margin: 2em 0;">
     <img src="/assets/diffusion_illustrated/unet.png" width="100%" alt>
@@ -67,9 +67,9 @@ So, now you have the question of how does we feed timestep t to the U-net? We do
 
 ## Denoising at inference time
 
-Now that we have trained our diffusion model to predict the noise intensity at a given timestep, how do we use that predicted noise at inference time to generate creative and interesting images? If you have ever used a diffusion model to generate images, you might have noticed that we have to give **num_inference_steps** parameter. At inference time, a random gaussian noise and **num_inference_steps** T is given as input to the model and model predict the noise $\epsilon_t$. $\epsilon_t$ is used to denoise $x_t$ to get $x_{t-1}$. This denoising process is done iteratively until we get $x_0$. The $\epsilon_t$ is the noise added to the clean image at timestep t, so we cannot directly use that to get $x_{t-1}$. So what we do is:
+Now that we have trained our diffusion model to predict the noise intensity at a given timestep, how do we use that predicted noise at inference time to generate creative and interesting images? If you have ever used a diffusion model to generate images, you might have noticed that we have to give **num_inference_steps** parameter. At inference time, a random gaussian noise and **num_inference_steps** T is given as input to the model and model predict the noise $$\epsilon_t$$. $$\epsilon_t$$ is used to denoise $$x_t$$ to get $$x_{t-1}$$. This denoising process is done iteratively until we get $$x_0$$. The $$\epsilon_t$$ is the noise added to the clean image at timestep t, so we cannot directly use that to get $$x_{t-1}$$. So what we do is:
 
-**$x_{t-1} = \frac{1}{\sqrt{\alpha_t}} . (x_t - \frac{1-αₜ}{\sqrt{(1 - \bar{\alpha_t})}} . \epsilon_t) + \sigma_t . z$**
+**$$x_{t-1} = \frac{1}{\sqrt{\alpha_t}} . (x_t - \frac{1-αₜ}{\sqrt{(1 - \bar{\alpha_t})}} . \epsilon_t) + \sigma_t . z$$**
 
 In the above formula, you might have noticed we have a new parameter z. That is a stochastic gaussian noise added after each denoising step to avoid stucking at a random direction along the way. Without that stochastic noise, if the model goes down the bad path and get stuck, it won't be able to get out of that nonoptimal direction.
 <br><br><br>
@@ -80,17 +80,17 @@ When we use diffusion models to generate images by giving prompts to the model, 
 
 Let us assume that x is the noisy input image and y is the label or the text prompt, by using Bayes' rule,
 
-**$p(x|y) = \frac{p(y|x) . p(x)}{p(y)}$**
+**$$p(x|y) = \frac{p(y|x) . p(x)}{p(y)}$$**
 
 which means that to predict the noise intensity of x, guided by y, we need a classifier p(y\|x). When we take log of the Bayes' rule, 
 
-**$logp(x|y) = logp(y|x) + logp(x) − logp(y)$**<br>
-**$\nabla_xlogp(x|y) = \nabla_xlogp(y|x) + \nabla_xlogp(x)$**<br>
+**$$logp(x|y) = logp(y|x) + logp(x) − logp(y)$$**<br>
+**$$\nabla_xlogp(x|y) = \nabla_xlogp(y|x) + \nabla_xlogp(x)$$**<br>
 
 which means that to predict the y-guided noise of x, we have to use the gradient of the classifier p(y\|x) and the score function p(x). We can ignore p(y) here because when we only care for the gradient w.r.t x, p(y) becomes constant.<br>
 And we scale the guidance term in the formula with γ, which you might have already known as the guidance_scale parameter if you are familiar with huggingface's diffusers library. The formula becomes
 
-**$\nabla_xlogp(x|y) = \nabla_xlogp(x) + \gamma.\nabla_xlogp(y|x)$**
+**$$\nabla_xlogp(x|y) = \nabla_xlogp(x) + \gamma.\nabla_xlogp(y|x)$$**
 
 In reality, using a classifier as the guidance for the diffusion model is a bit cumbersome because we cannot just use a pretrained classifier because the classifiers trained on normal clean images are not noise-aware. So, in order to use classifier-guided diffusion, we have to train a classifier to be noise aware. And by using a completely separate classifier, computation is not cheap either. Here where classifier-free guidance comes into the scene.
 <br><br><br>
@@ -99,18 +99,18 @@ In reality, using a classifier as the guidance for the diffusion model is a bit 
 
 In classifier-guided diffusion models, we need a separate classifier p(y\|x) which is inefficient and cumbersome. When we take a look at Bayes' rule, we can see that:
 
-**$p(y|x) = \frac{p(x|y) . p(y)}{p(x)}$**
+**$$p(y|x) = \frac{p(x|y) . p(y)}{p(x)}$$**
 
 If we inference it as in previous section, we get
 
-**$\nabla_xlogp(y|x) = \nabla_xlogp(x|y) − \nabla_xlogp(x)$**
+**$$\nabla_xlogp(y|x) = \nabla_xlogp(x|y) − \nabla_xlogp(x)$$**
 
-By substituting the $\nabla_xlogp(y|x)$ back in to the guided score function p(x\|y) formula, we get
+By substituting the $$\nabla_xlogp(y|x)$$ back in to the guided score function p(x\|y) formula, we get
 
-**$\nabla_xlogp(x|y) = \nabla_xlogp(x) + \gamma.(\nabla_xlogp(x|y) − \nabla_xlogp(x))$**
+**$$\nabla_xlogp(x|y) = \nabla_xlogp(x) + \gamma.(\nabla_xlogp(x|y) − \nabla_xlogp(x))$$**
 
 By doing so, we no longer need a separate classifier p(y\|x), we can use one model both as a classifier and the noise predictor. At training time, we train the model with noisy image + text embedding by using cross-attention between intermediate u-net features and the text embedding. Model is trained with conditioning dropout which drops text embedding at about 10-20% of the time during training. In this fashion, one model is trained both for conditioned and unconditioned scenerios. 🤯🤯<br>
-At inference time, model makes prediction twice, once with user prompt as text embedding for $\nabla_xlogp(x|y)$ and once with null text embedding for unconditioned $\nabla_xlogp(x)$. By using the formula above, we can get the final noise prediction and substract that noise from input noisy image $x_t$ to get $x_{t-1}$.
+At inference time, model makes prediction twice, once with user prompt as text embedding for $$\nabla_xlogp(x|y)$$ and once with null text embedding for unconditioned $$\nabla_xlogp(x)$$. By using the formula above, we can get the final noise prediction and substract that noise from input noisy image $$x_t$$ to get $$x_{t-1}$$.
 <br><br><br>
 
 ## Conclusion
