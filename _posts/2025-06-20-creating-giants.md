@@ -6,7 +6,7 @@ date: 2025-06-20
 ---
 
 <div style="text-align: center; margin: 2em 0;">
-    <img src="/assets/be_undisciplined/Jacob_Jordaens-Fall_of_the_giants.jpg" width="610" height="382" alt>
+    <img src="/assets/be_undisciplined/Jacob_Jordaens-Fall_of_the_giants.jpg" width="100%" alt>
     <p style="font-style: italic; color: #666; margin-top: 0.5em; font-size: 12">Fall of the giants by Jacob Jordaens</p>
 </div>
 
