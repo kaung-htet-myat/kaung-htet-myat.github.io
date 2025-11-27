@@ -5,7 +5,7 @@ permalink: /
 ---
 
 ### About Me
-I am a machine learning engineer who enjoys listening to metal songs while coding.
+I like building things, reading books and playing games.
 
 <br>
 
